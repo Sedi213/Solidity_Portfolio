@@ -4,6 +4,7 @@ import { loadFixture, time } from "@nomicfoundation/hardhat-toolbox/network-help
 
 describe("HalfEther", async function () {
     const oneGwei = 10**9;
+    const InsufficientBalanceErrorText = "Insufficient Balance";
 
     describe("Mint",function(){
         const zeroMintErrorText = "Not allow to mint zero ammount";
@@ -52,7 +53,6 @@ describe("HalfEther", async function () {
     })
 
     describe("Redeem", function(){
-        const InsufficientBalanceErrorText = "Insufficient Balance";
 
         async function deployHalfEtherWithBalance() {
             const [owner, otherAccount] = await hre.ethers.getSigners();
@@ -100,20 +100,20 @@ describe("HalfEther", async function () {
            .withArgs(owner, oneGwei);
         })
     })
+
+    async function deployHalfEtherWithOwnerBalance() {
+        const [owner, otherAccount] = await hre.ethers.getSigners();
+        const halfEther = await hre.ethers.deployContract("HalfEther");
+
+        await halfEther.mint({
+            value: oneGwei,
+        })
+
+        return { halfEther, owner, otherAccount};
+    }
+
     describe("Transfer as owner", function(){
-        const InsufficientBalanceErrorText = "Insufficient Balance";
 
-        async function deployHalfEtherWithOwnerBalance() {
-            const [owner, otherAccount] = await hre.ethers.getSigners();
-            const halfEther = await hre.ethers.deployContract("HalfEther");
-
-            await halfEther.mint({
-                value: oneGwei,
-            })
-
-            return { halfEther, owner, otherAccount};
-        }
-        
         it("Should successfully transwer 10^9 tokens", async function () {
             const {halfEther, owner, otherAccount} = await loadFixture(deployHalfEtherWithOwnerBalance);
 
