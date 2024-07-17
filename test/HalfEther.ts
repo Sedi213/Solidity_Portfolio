@@ -100,4 +100,44 @@ describe("HalfEther", async function () {
            .withArgs(owner, oneGwei);
         })
     })
+    describe("Transfer as owner", function(){
+        const InsufficientBalanceErrorText = "Insufficient Balance";
+
+        async function deployHalfEtherWithOwnerBalance() {
+            const [owner, otherAccount] = await hre.ethers.getSigners();
+            const halfEther = await hre.ethers.deployContract("HalfEther");
+
+            await halfEther.mint({
+                value: oneGwei,
+            })
+
+            return { halfEther, owner, otherAccount};
+        }
+        
+        it("Should successfully transwer 10^9 tokens", async function () {
+            const {halfEther, owner, otherAccount} = await loadFixture(deployHalfEtherWithOwnerBalance);
+
+            //on start owner balance = 2*oneGwei
+            await halfEther.transfetTo(owner, otherAccount, oneGwei)
+
+            expect(await halfEther.myBalance()).to.equal(oneGwei);
+            expect(await halfEther.connect(otherAccount).myBalance()).to.equal(oneGwei);
+        })
+        
+
+        it("Should revert with the right error if transfer amount bigger than balance", async function () {
+            const {halfEther, owner, otherAccount} = await loadFixture(deployHalfEtherWithOwnerBalance);
+
+           await expect(halfEther.transfetTo(owner, otherAccount, oneGwei*3))
+           .to.be.revertedWith(InsufficientBalanceErrorText);
+        })
+
+        it("Should emit Transfer", async function () {
+            const {halfEther, owner, otherAccount} = await loadFixture(deployHalfEtherWithOwnerBalance);
+
+           await expect(halfEther.transfetTo(owner, otherAccount, oneGwei))
+           .to.emit(halfEther, "Transfer")
+           .withArgs(owner, otherAccount, oneGwei);
+        })
+    })
 })
