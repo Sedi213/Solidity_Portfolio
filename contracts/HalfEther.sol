@@ -30,7 +30,7 @@ contract HalfEther {
         require(balances[msg.sender] >= amount, "Insufficient Balance");
         balances[msg.sender] -= amount;
         payable(msg.sender).transfer(amount/2);
-        emit Redeem(msg.sender, amount/2);
+        emit Redeem(msg.sender, amount);
     }
 
 
