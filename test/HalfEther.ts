@@ -140,4 +140,37 @@ describe("HalfEther", async function () {
            .withArgs(owner, otherAccount, oneGwei);
         })
     })
+
+    describe("Approve and Transfer", function(){
+        
+        it("Should successfully approve 10^9 tokens", async function () {
+            const {halfEther,owner, otherAccount} = await loadFixture(deployHalfEtherWithOwnerBalance);
+
+            await halfEther.approve(otherAccount, oneGwei)
+
+            expect(await halfEther.allowance(owner, otherAccount)).to.equal(oneGwei);
+        })
+        
+        it("Should successfully approve and transwer 10^9 tokens", async function () {
+            const {halfEther,owner, otherAccount} = await loadFixture(deployHalfEtherWithOwnerBalance);
+
+            await halfEther.approve(otherAccount, oneGwei)
+            expect(await halfEther.allowance(owner,otherAccount)).to.equal(oneGwei);
+
+            await halfEther.connect(otherAccount).transfetTo(owner, otherAccount, oneGwei)
+            expect(await halfEther.myBalance()).to.equal(oneGwei);
+            expect(await halfEther.connect(otherAccount).myBalance()).to.equal(oneGwei);
+            expect(await halfEther.allowance(owner, otherAccount)).to.equal(0);
+        })
+
+        it("Should revert with the right error if transfer amount bigger than balance", async function () {
+            const {halfEther, owner, otherAccount} = await loadFixture(deployHalfEtherWithOwnerBalance);
+
+            await halfEther.approve(otherAccount, oneGwei)
+            expect(await halfEther.allowance(owner, otherAccount)).to.equal(oneGwei);
+
+           await expect(halfEther.connect(otherAccount).transfetTo(owner, otherAccount, oneGwei*3))
+           .to.be.revertedWith(InsufficientBalanceErrorText);
+        })
+    })
 })
