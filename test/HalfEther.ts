@@ -118,7 +118,7 @@ describe("HalfEther", async function () {
             const {halfEther, owner, otherAccount} = await loadFixture(deployHalfEtherWithOwnerBalance);
 
             //on start owner balance = 2*oneGwei
-            await halfEther.transfetTo(owner, otherAccount, oneGwei)
+            await halfEther.transfetFrom(owner, otherAccount, oneGwei)
 
             expect(await halfEther.myBalance()).to.equal(oneGwei);
             expect(await halfEther.connect(otherAccount).myBalance()).to.equal(oneGwei);
@@ -128,14 +128,14 @@ describe("HalfEther", async function () {
         it("Should revert with the right error if transfer amount bigger than balance", async function () {
             const {halfEther, owner, otherAccount} = await loadFixture(deployHalfEtherWithOwnerBalance);
 
-           await expect(halfEther.transfetTo(owner, otherAccount, oneGwei*3))
+           await expect(halfEther.transfetFrom(owner, otherAccount, oneGwei*3))
            .to.be.revertedWith(InsufficientBalanceErrorText);
         })
 
         it("Should emit Transfer", async function () {
             const {halfEther, owner, otherAccount} = await loadFixture(deployHalfEtherWithOwnerBalance);
 
-           await expect(halfEther.transfetTo(owner, otherAccount, oneGwei))
+           await expect(halfEther.transfetFrom(owner, otherAccount, oneGwei))
            .to.emit(halfEther, "Transfer")
            .withArgs(owner, otherAccount, oneGwei);
         })
@@ -157,7 +157,7 @@ describe("HalfEther", async function () {
             await halfEther.approve(otherAccount, oneGwei)
             expect(await halfEther.allowance(owner,otherAccount)).to.equal(oneGwei);
 
-            await halfEther.connect(otherAccount).transfetTo(owner, otherAccount, oneGwei)
+            await halfEther.connect(otherAccount).transfetFrom(owner, otherAccount, oneGwei)
             expect(await halfEther.myBalance()).to.equal(oneGwei);
             expect(await halfEther.connect(otherAccount).myBalance()).to.equal(oneGwei);
             expect(await halfEther.allowance(owner, otherAccount)).to.equal(0);
@@ -169,7 +169,7 @@ describe("HalfEther", async function () {
             await halfEther.approve(otherAccount, oneGwei)
             expect(await halfEther.allowance(owner, otherAccount)).to.equal(oneGwei);
 
-           await expect(halfEther.connect(otherAccount).transfetTo(owner, otherAccount, oneGwei*3))
+           await expect(halfEther.connect(otherAccount).transfetFrom(owner, otherAccount, oneGwei*3))
            .to.be.revertedWith(InsufficientBalanceErrorText);
         })
     })
