@@ -7,12 +7,16 @@ contract MyERC721Token is ERC721URIStorage {
     uint256 private _nextTokenId;
     address public owner;
 
+    error NotOwner();
+
     constructor() ERC721("My NFT","MYNFT"){
         owner = msg.sender;
     }
 
     modifier onlyOwner {
-        require(msg.sender != owner);
+        if(msg.sender != owner){
+           revert NotOwner();
+        }
         _;
     }
 
