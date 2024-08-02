@@ -8,7 +8,8 @@ const config: HardhatUserConfig = {
   networks: {
     sepolia: {
       url: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
-      accounts: [PRIVATE_SEPOLIA_KEY]
+      accounts: [PRIVATE_SEPOLIA_KEY],
+      timeout: 60000
     }
   }
 };
