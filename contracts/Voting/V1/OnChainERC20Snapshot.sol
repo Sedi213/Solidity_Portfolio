@@ -23,12 +23,10 @@ contract OnChainERC20Snapshot is IBalanceProvider {
         ERC20 contractAdress,
         address[] memory usersAddresses
     ) external {
-
         for (uint i = 0; i < usersAddresses.length; i++) {
             balances[usersAddresses[i]] = contractAdress.balanceOf(
                 usersAddresses[i]
             );
         }
-
     }
 }
