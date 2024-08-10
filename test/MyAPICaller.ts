@@ -28,9 +28,18 @@ describe("MyAPICaller", function () {
     const { myAPICaller } = await GetContractInstance();
 
     await new Promise(async (resolve, reject) => {
-      myAPICaller.once("RequestVolumeReceive", async () => {
-        expect(await myAPICaller.volume()).to.above(1);
-        resolve("done");
+      myAPICaller.once("RequestVolumeReceive", async (requestId, volume) => {
+        try {
+          let events = await myAPICaller.queryFilter(
+            myAPICaller.filters.RequestVolumeSend
+          );
+          let lastEvent = events[events.length - 1];
+
+          expect(requestId).to.equal(lastEvent.args.requestId);
+          resolve("done");
+        } catch (error) {
+          reject(error);
+        }
       });
     });
   });
