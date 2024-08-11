@@ -4,11 +4,20 @@ const { vars } = require("hardhat/config");
 const ALCHEMY_API_KEY = vars.get("ALCHEMY_API_KEY");
 const PRIVATE_SEPOLIA_KEY = vars.get("PRIVATE_SEPOLIA_KEY");
 const PRIVATE_COINMARKETCAP_KEY = vars.get("PRIVATE_COINMARKETCAP_KEY");
+const GAS_REPORTER_ENABLED = vars.get("GAS_REPORTER_ENABLED");
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.24",
+  solidity: {
+    version: "0.8.24",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 100,
+      },
+    },
+  },
   gasReporter: {
-    enabled: true,
+    enabled: GAS_REPORTER_ENABLED,
     currency: "USD",
     coinmarketcap: PRIVATE_COINMARKETCAP_KEY,
     gasPriceApi:
