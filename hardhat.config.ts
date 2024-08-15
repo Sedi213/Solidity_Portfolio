@@ -8,8 +8,9 @@ const GAS_REPORTER_ENABLED = vars.get("GAS_REPORTER_ENABLED");
 
 const config: HardhatUserConfig = {
   solidity: {
-    version: "0.8.24",
+    version: "0.8.26",
     settings: {
+      viaIR: true,
       optimizer: {
         enabled: true,
         runs: 100,
