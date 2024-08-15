@@ -147,7 +147,53 @@ describe("MyGov", function () {
   });
 
   describe("Queue and Execute", function () {
-    this.timeout(60000);
+    it("Should revert execute if after queue, delay not waited", async function () {
+      const {
+        myGov,
+        myTimeLock,
+        secondAccount,
+        proposalId,
+        encodedFunctionCall,
+        descriptionHash,
+      } = await loadFixture(deployWithPropalsasl);
+      const voteWay = 1;
+
+      await myGov.castVote(proposalId, voteWay);
+      await myGov.connect(secondAccount).castVote(proposalId, voteWay);
+
+      await expect(
+        myGov.queue(
+          [myTimeLock.getAddress()],
+          [0],
+          [encodedFunctionCall],
+          descriptionHash
+        )
+      ).be.revertedWithCustomError(myGov, "GovernorUnexpectedProposalState");
+    });
+
+    it("Should revert execute if not queue before", async function () {
+      const {
+        myGov,
+        myTimeLock,
+        secondAccount,
+        proposalId,
+        encodedFunctionCall,
+        descriptionHash,
+      } = await loadFixture(deployWithPropalsasl);
+      const voteWay = 1;
+
+      await myGov.castVote(proposalId, voteWay);
+      await myGov.connect(secondAccount).castVote(proposalId, voteWay);
+
+      await expect(
+        myGov.execute(
+          [myTimeLock.getAddress()],
+          [0],
+          [encodedFunctionCall],
+          descriptionHash
+        )
+      ).be.revertedWithCustomError(myGov, "GovernorUnexpectedProposalState");
+    });
 
     it("Should queue and execute", async function () {
       this.timeout(60000); //because of moving block
