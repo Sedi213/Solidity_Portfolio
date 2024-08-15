@@ -31,8 +31,7 @@ contract MyERC721Token is ERC721URIStorage {
         return tokenId;
     }
 
-    function burn(uint256 tokenId) public onlyOwner{
-        address ownerToken = _ownerOf(tokenId);
-        _update(address(0), tokenId, ownerToken);
+    function burn(uint256 tokenId) public onlyOwner {
+        _burn(tokenId);
     }
 }
