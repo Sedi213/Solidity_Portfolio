@@ -11,16 +11,17 @@ contract Lottery is VRFConsumerBaseV2Plus, AutomationCompatibleInterface {
         OPEN,
         PENDING
     }
+
     uint32 constant CALLBACK_GAS_LIMIT = 500000;
-    uint16 private constant REQUEST_CONFIRMATIONS = 3;
-    uint32 private constant NUM_WORDS = 1;
+    uint16 constant REQUEST_CONFIRMATIONS = 3;
+    uint32 constant NUM_WORDS = 1;
     uint256 public immutable interval;
     uint256 public immutable weiToParticipate;
     uint256 public immutable weiFee;
-    uint256 public roundBalance;
     bytes32 public immutable keyHash;
     uint256 public immutable subscriptionId;
 
+    uint256 public roundBalance;
     uint256 public lastTimeStamp;
     LotteryState public lotteryState;
     address[] public players;
