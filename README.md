@@ -10,7 +10,7 @@ I created this repository to demonstrate my skills as a Solidity developer. All 
 
 - Lottery
 
-  Simple Lottery that uses ChainLink Automation for execution automatically and ChainLink VRF2.5 for requesting random numbers. Use ignition for deploy to Sepolia
+  Simple Lottery that uses ChainLink `Automation` for execution automatically and ChainLink `VRF2.5` for requesting random numbers. Use ignition for deploy to Sepolia
 
 - MyGovernace
 
