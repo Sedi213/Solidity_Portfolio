@@ -18,7 +18,7 @@ I created this repository to demonstrate my skills as a Solidity developer. All 
 
 - MyAPICaller (APIConsumer)
 
-  Test base flow using ChainLink APIConsumer (Tests runned in Sepolia)
+  Test base flow using ChainLink `APIConsumer` (Tests runned in Sepolia)
 
 - Proxy
 
